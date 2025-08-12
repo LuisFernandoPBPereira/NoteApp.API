@@ -1,18 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using NoteApp.Common.Exceptions;
 using NoteApp.Domain.Entities;
 using NoteApp.Domain.Repositories;
 using NoteApp.Infraestructure.Data;
+using NoteApp.Infraestructure.Models;
 
 namespace NoteApp.Infraestructure.Repositories;
 
 public class UsuarioRepository : IUsuarioRepository
 {
     private readonly NoteAppContext _dbContext;
+    private readonly UserManager<Usuarios> _userManger;
 
-    public UsuarioRepository(NoteAppContext dbContext)
+    public UsuarioRepository(NoteAppContext dbContext, UserManager<Usuarios> userManger)
     {
         _dbContext = dbContext;
+        _userManger = userManger;
     }
 
     public async Task Atualizar(Usuario usuario, CancellationToken cancellationToken = default)
@@ -21,13 +25,25 @@ public class UsuarioRepository : IUsuarioRepository
 
         if (usuarioModel is null) throw new NotFoundException("Usuário não encontrado");
 
+        usuarioModel.Nome = usuario.Nome;
+        usuarioModel.Email = usuario.Email;
+
         _dbContext.Usuarios.Update(usuarioModel);
         await _dbContext.SaveChangesAsync();
     }
 
     public async Task Criar(Usuario usuario, string senha, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var usuarioModel = new Usuarios
+        {
+            Nome = usuario.Nome,
+            UserName = usuario.UserName,
+            Email = usuario.Email
+        };
+
+        var senhaComHash = _userManger.PasswordHasher.HashPassword(usuarioModel, senha);
+
+        await _userManger.CreateAsync(usuarioModel, senhaComHash);
     }
 
     public async Task<Usuario?> ObterUsuarioPorId(Guid userId, CancellationToken cancellationToken = default)
