@@ -3,33 +3,33 @@ using Microsoft.AspNetCore.Mvc;
 using NoteApp.Application.DTOs.Usuarios;
 using NoteApp.Application.Services;
 
-namespace NoteApp.API.Controllers.Usuarios
+namespace NoteApp.API.Controllers.Usuarios;
+
+[Tags("Usuário")]
+[Route("api/[controller]")]
+[ApiController]
+[AllowAnonymous]
+public class LoginController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    [AllowAnonymous]
-    public class LoginController : ControllerBase
+    private readonly IAuthenticationService _authenticationService;
+
+    public LoginController(IAuthenticationService authenticationService)
     {
-        private readonly IAuthenticationService _authenticationService;
+        _authenticationService = authenticationService;
+    }
 
-        public LoginController(IAuthenticationService authenticationService)
+    [HttpPost]
+    public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+    {
+        try
         {
-            _authenticationService = authenticationService;
+            var token = await _authenticationService.Login(loginDto.UserName, loginDto.Senha);
+
+            return Ok(token);
         }
-
-        [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+        catch (Exception exception)
         {
-            try
-            {
-                var token = await _authenticationService.Login(loginDto.UserName, loginDto.Senha);
-
-                return Ok(token);
-            }
-            catch (Exception exception)
-            {
-                return BadRequest(exception.Message);
-            }
+            return BadRequest(exception.Message);
         }
     }
 }

@@ -42,9 +42,9 @@ public class UsuarioRepository : IUsuarioRepository
             Email = usuario.Email
         };
 
-        var senhaComHash = _userManger.PasswordHasher.HashPassword(usuarioModel, senha);
+        var result = await _userManger.CreateAsync(usuarioModel, senha);
 
-        await _userManger.CreateAsync(usuarioModel, senhaComHash);
+        if (!result.Succeeded) throw new Exception("Não foi possível criar usuário, tente novamente");
     }
 
     public async Task<Usuario?> ObterUsuarioPorId(Guid userId, CancellationToken cancellationToken = default)

@@ -5,33 +5,33 @@ using NoteApp.Application.UseCases.Lembretes;
 using NoteApp.Domain.Entities;
 using NoteApp.Infraestructure.Roles;
 
-namespace NoteApp.API.Controllers.Lembretes
+namespace NoteApp.API.Controllers.Lembretes;
+
+[Tags("Lembrete")]
+[Route("api/[controller]")]
+[ApiController]
+[Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Comum)}")]
+public class CriarLembreteController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    [Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Comum)}")]
-    public class CriarLembreteController : ControllerBase
+    private readonly CriarLembreteUseCase _criarLembrete;
+
+    public CriarLembreteController(CriarLembreteUseCase criarLembrete)
     {
-        private readonly CriarLembreteUseCase _criarLembrete;
+        _criarLembrete = criarLembrete;
+    }
 
-        public CriarLembreteController(CriarLembreteUseCase criarLembrete)
+    [HttpPost]
+    public async Task<IActionResult> Executar([FromBody] CriarLembreteDto lembreteDto, CancellationToken cancellationToken)
+    {
+        try
         {
-            _criarLembrete = criarLembrete;
+            var lembreteId = await _criarLembrete.Executar(lembreteDto, cancellationToken);
+
+            return CreatedAtAction(nameof(Executar), lembreteId);
         }
-
-        [HttpPost]
-        public async Task<IActionResult> Executar([FromBody] CriarLembreteDto lembreteDto, CancellationToken cancellationToken)
+        catch (Exception exception)
         {
-            try
-            {
-                var lembreteId = await _criarLembrete.Executar(lembreteDto, cancellationToken);
-
-                return Ok(lembreteId);
-            }
-            catch (Exception exception)
-            {
-                return BadRequest(exception.Message);
-            }
+            return BadRequest(exception.Message);
         }
     }
 }
