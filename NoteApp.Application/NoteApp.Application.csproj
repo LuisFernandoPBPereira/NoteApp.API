@@ -10,4 +10,8 @@
     <ProjectReference Include="..\NoteApp.Domain\NoteApp.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UseCases\Usuarios\" />
+  </ItemGroup>
+
 </Project>
