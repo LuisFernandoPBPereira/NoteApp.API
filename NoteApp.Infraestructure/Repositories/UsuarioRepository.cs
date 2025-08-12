@@ -36,6 +36,7 @@ public class UsuarioRepository : IUsuarioRepository
     {
         var usuarioModel = new Usuarios
         {
+            Id = usuario.Id,
             Nome = usuario.Nome,
             UserName = usuario.UserName,
             Email = usuario.Email

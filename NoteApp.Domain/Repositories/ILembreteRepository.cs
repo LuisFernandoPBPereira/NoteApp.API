@@ -10,5 +10,5 @@ public interface ILembreteRepository
     public Task<List<Lembrete>> ObterLembretesComVencimentoEmUmaSemana(int take, int skip, Guid? userId, CancellationToken cancellationToken = default);
     public Task Criar(Lembrete lembrete, CancellationToken cancellationToken = default);
     public Task Atualizar(Lembrete lembrete, CancellationToken cancellationToken = default);
-    public Task Remover(Guid lembreteId, CancellationToken cancellationToken = default);
+    public Task Remover(Guid lembreteId, Guid? userId, CancellationToken cancellationToken = default);
 }

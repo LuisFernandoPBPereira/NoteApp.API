@@ -151,11 +151,11 @@ public class LembreteRepository : ILembreteRepository
         return lembretes;
     }
 
-    public async Task Remover(Guid lembreteId, CancellationToken cancellationToken = default)
+    public async Task Remover(Guid lembreteId, Guid? userId, CancellationToken cancellationToken = default)
     {
         var lembrete = await _dbContext.Lembretes.Where(x => x.Id == lembreteId).FirstOrDefaultAsync(cancellationToken);
 
-        if (lembrete is null)
+        if (lembrete is null || (userId.HasValue && lembrete.UserId != userId.Value))
         {
             throw new NotFoundException("Lembrete não encontrado");
         }

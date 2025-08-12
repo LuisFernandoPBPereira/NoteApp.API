@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NoteApp.Application.Services;
 using NoteApp.Application.UseCases.Lembretes;
+using NoteApp.Application.UseCases.Usuarios;
 using NoteApp.Domain.Repositories;
 using NoteApp.Infraestructure.Data;
 using NoteApp.Infraestructure.Models;
@@ -19,7 +20,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ILembreteRepository, LembreteRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+
 builder.Services.AddScoped<CriarLembreteUseCase>();
+builder.Services.AddScoped<AtualizarLembreteUseCase>();
+builder.Services.AddScoped<RemoverLembreteUseCase>();
+builder.Services.AddScoped<ObterLembretePorIdUseCase>();
+builder.Services.AddScoped<ObterLembretesComVencimentoEmUmaSemanaUseCase>();
+builder.Services.AddScoped<ObterLembretesComVencimentoHojeUseCase>();
+builder.Services.AddScoped<ObterLembretesUseCase>();
+
+builder.Services.AddScoped<CriarUsuarioUseCase>();
+builder.Services.AddScoped<AtualizarUsuarioUseCase>();
+builder.Services.AddScoped<RemoverUsuarioUseCase>();
+builder.Services.AddScoped<ObterUsuarioPorIdUseCase>();
+builder.Services.AddScoped<ObterUsuariosUseCase>();
 
 builder.Services.AddDbContext<NoteAppContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Database")));
 
