@@ -62,7 +62,7 @@ public class Lembrete
             throw new ArgumentException("Data de Alerta deve ser no futuro", nameof(dataAlerta));
         }
 
-        if (!Regex.IsMatch(cor, @"^#[0-9A-Fa-f]{6}$"))
+        if (string.IsNullOrWhiteSpace(cor) || !Regex.IsMatch(cor, @"^#[0-9A-Fa-f]{6}$"))
         {
             throw new ArgumentException("A cor deve estar em hexadecimal", nameof(cor));
         }
