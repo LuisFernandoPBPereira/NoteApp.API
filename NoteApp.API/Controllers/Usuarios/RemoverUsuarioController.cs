@@ -7,7 +7,6 @@ using NoteApp.Infraestructure.Roles;
 namespace NoteApp.API.Controllers.Usuarios;
 
 [Tags("Usuário")]
-[Route("api/[controller]")]
 [ApiController]
 [Authorize(Roles = nameof(Role.Admin))]
 public class RemoverUsuarioController : ControllerBase
@@ -19,7 +18,7 @@ public class RemoverUsuarioController : ControllerBase
         _removerUsuarioUseCase = removerUsuarioUseCase;
     }
 
-    [HttpDelete("/{userId}")]
+    [HttpDelete("remover/usuario/{userId}")]
     public async Task<IActionResult> Executar([FromRoute] Guid userId, CancellationToken cancellationToken)
     {
         try

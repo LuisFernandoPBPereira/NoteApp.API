@@ -7,7 +7,7 @@ using NoteApp.Infraestructure.Roles;
 namespace NoteApp.API.Controllers.Usuarios;
 
 [Tags("Usuário")]
-[Route("api/[controller]")]
+[Route("usuarios")]
 [ApiController]
 [Authorize(Roles = nameof(Role.Admin))]
 public class ObterUsuariosController : ControllerBase

@@ -8,7 +8,7 @@ using NoteApp.Infraestructure.Roles;
 namespace NoteApp.API.Controllers.Lembretes;
 
 [Tags("Lembrete")]
-[Route("api/[controller]")]
+[Route("criar/lembrete")]
 [ApiController]
 [Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Comum)}")]
 public class CriarLembreteController : ControllerBase

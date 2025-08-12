@@ -7,7 +7,6 @@ using NoteApp.Infraestructure.Roles;
 namespace NoteApp.API.Controllers.Usuarios;
 
 [Tags("Usuário")]
-[Route("api/[controller]")]
 [ApiController]
 [Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Comum)}")]
 public class ObterUsuarioPorIdController : ControllerBase
@@ -19,7 +18,7 @@ public class ObterUsuarioPorIdController : ControllerBase
         _obterUsuarioPorIdUseCase = obterUsuarioPorIdUseCase;
     }
 
-    [HttpGet("/userId")]
+    [HttpGet("usuario/{userId}")]
     public async Task<IActionResult> Executar([FromRoute] Guid userId, CancellationToken cancellationToken)
     {
         try

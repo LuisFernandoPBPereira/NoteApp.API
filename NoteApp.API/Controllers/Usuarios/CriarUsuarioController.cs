@@ -6,7 +6,7 @@ using NoteApp.Application.UseCases.Usuarios;
 namespace NoteApp.API.Controllers.Usuarios;
 
 [Tags("Usuário")]
-[Route("api/[controller]")]
+[Route("criar/usuario")]
 [ApiController]
 [AllowAnonymous]
 public class CriarUsuarioController : ControllerBase

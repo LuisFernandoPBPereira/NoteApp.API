@@ -6,7 +6,7 @@ using NoteApp.Application.Services;
 namespace NoteApp.API.Controllers.Usuarios;
 
 [Tags("Usuário")]
-[Route("api/[controller]")]
+[Route("login")]
 [ApiController]
 [AllowAnonymous]
 public class LoginController : ControllerBase

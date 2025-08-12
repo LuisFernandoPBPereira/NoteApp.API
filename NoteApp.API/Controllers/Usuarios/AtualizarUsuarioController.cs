@@ -8,7 +8,6 @@ using NoteApp.Infraestructure.Roles;
 namespace NoteApp.API.Controllers.Usuarios;
 
 [Tags("Usuário")]
-[Route("api/[controller]")]
 [ApiController]
 [Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Comum)}")]
 public class AtualizarUsuarioController : ControllerBase
@@ -20,7 +19,7 @@ public class AtualizarUsuarioController : ControllerBase
         _atualizarUsuarioUseCase = atualizarUsuarioUseCase;
     }
 
-    [HttpPatch("/{userId}")]
+    [HttpPatch("atualizar/usuario/{userId}")]
     public async Task<IActionResult> Executar([FromBody] AtualizarUsuarioDto usuarioDto, [FromRoute] Guid userId, CancellationToken cancellationToken)
     {
         try
