@@ -68,9 +68,9 @@ public class LembreteRepository : ILembreteRepository
         return lembreteEntity;
     }
 
-    public async Task<List<Lembrete>> ObterLembretes(int take, int skip, CancellationToken cancellationToken = default)
+    public async Task<List<Lembrete>> ObterLembretes(int take, int skip, Guid? userId, CancellationToken cancellationToken = default)
     {
-        var lembretes = await _dbContext.Lembretes
+        var query = _dbContext.Lembretes
             .Select(x => new Lembrete
             {
                 Id = x.Id,
@@ -80,7 +80,14 @@ public class LembreteRepository : ILembreteRepository
                 DataCriacao = x.DataCriacao,
                 DataModificacao = x.DataModificacao,
                 Cor = x.Cor
-            })
+            });
+
+        if (userId.HasValue)
+        {
+            query = query.Where(x => x.UserId == userId);
+        }
+
+        var lembretes = await query
             .Skip(skip)
             .Take(take)
             .ToListAsync(cancellationToken);
@@ -88,9 +95,9 @@ public class LembreteRepository : ILembreteRepository
         return lembretes;
     }
 
-    public async Task<List<Lembrete>> ObterLembretesComVencimentoEmUmaSemana(int take, int skip, CancellationToken cancellationToken = default)
+    public async Task<List<Lembrete>> ObterLembretesComVencimentoEmUmaSemana(int take, int skip, Guid? userId, CancellationToken cancellationToken = default)
     {
-        var lembretes = await _dbContext.Lembretes
+       var query = _dbContext.Lembretes
             .Where(x => x.DataAlerta.Value.Date == DateTime.Now.Date.AddDays(7))
             .Select(x => new Lembrete
             {
@@ -101,7 +108,14 @@ public class LembreteRepository : ILembreteRepository
                 DataCriacao = x.DataCriacao,
                 DataModificacao = x.DataModificacao,
                 Cor = x.Cor
-            })
+            });
+
+        if (userId.HasValue)
+        {
+            query = query.Where(x => x.UserId == userId);
+        }
+
+        var lembretes = await query
             .Skip(skip)
             .Take(take)
             .ToListAsync(cancellationToken);
@@ -109,9 +123,9 @@ public class LembreteRepository : ILembreteRepository
         return lembretes;
     }
 
-    public async Task<List<Lembrete>> ObterLembretesComVencimentoHoje(int take, int skip, CancellationToken cancellationToken = default)
+    public async Task<List<Lembrete>> ObterLembretesComVencimentoHoje(int take, int skip, Guid? userId, CancellationToken cancellationToken = default)
     {
-        var lembretes = await _dbContext.Lembretes
+        var query = _dbContext.Lembretes
             .Where(x => x.DataAlerta.Value.Date == DateTime.Now.Date)
             .Select(x => new Lembrete
             {
@@ -122,7 +136,14 @@ public class LembreteRepository : ILembreteRepository
                 DataCriacao = x.DataCriacao,
                 DataModificacao = x.DataModificacao,
                 Cor = x.Cor
-            })
+            });
+
+        if (userId.HasValue)
+        {
+            query = query.Where(x => x.UserId == userId);
+        }
+
+        var lembretes = await query
             .Skip(skip)
             .Take(take)
             .ToListAsync(cancellationToken);
@@ -130,8 +151,16 @@ public class LembreteRepository : ILembreteRepository
         return lembretes;
     }
 
-    public Task Remover(Guid lembreteId, CancellationToken cancellationToken = default)
+    public async Task Remover(Guid lembreteId, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var lembrete = await _dbContext.Lembretes.Where(x => x.Id == lembreteId).FirstOrDefaultAsync(cancellationToken);
+
+        if (lembrete is null)
+        {
+            throw new NotFoundException("Lembrete não encontrado");
+        }
+
+        _dbContext.Lembretes.Remove(lembrete);
+        await _dbContext.SaveChangesAsync();
     }
 }
