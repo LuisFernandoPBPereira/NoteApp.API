@@ -1,5 +1,7 @@
 <h1 align="center">📝 API de Lembretes 📝</h1>
 
+### Linguagem utilizada: C#
+
 ## Sobre
 
 Esta é uma API de Lembretes/Notas, permitindo que você consiga guardar suas anotações do dia a dia!
