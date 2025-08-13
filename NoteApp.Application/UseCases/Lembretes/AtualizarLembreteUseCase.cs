@@ -15,15 +15,12 @@ public class AtualizarLembreteUseCase
 
     public async Task Executar(Guid lembreteId, AtualizarLembreteDto lembreteDto, CancellationToken cancellationToken)
     {
-        var lembrete = new Lembrete()
-        {
-            Id = lembreteId,
-            Titulo = lembreteDto.Titulo,
-            Descricao = lembreteDto.Descricao,
-            DataAlerta = lembreteDto.DataAlerta,
-            Cor = lembreteDto.Cor,
-            UserId = lembreteDto.UserId
-        };
+        var lembrete = Lembrete.Criar(lembreteId,
+                                      lembreteDto.Titulo,
+                                      lembreteDto.Descricao,
+                                      lembreteDto.DataAlerta,
+                                      lembreteDto.Cor,
+                                      lembreteDto.UserId);
 
         await _repository.Atualizar(lembrete, cancellationToken);
     }

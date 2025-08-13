@@ -49,6 +49,26 @@ public class Lembrete
             throw;
         }
     }
+    
+    public static Lembrete Criar(Guid id, string titulo, string? descricao, DateTime? dataAlerta, string cor, Guid userId)
+    {
+        try
+        {
+            Validar(titulo, dataAlerta, cor);
+
+            var lembrete = new Lembrete(id, titulo, descricao, DateTime.Now, dataModificacao: null, dataAlerta, cor, userId);
+
+            return lembrete;
+        }
+        catch (ArgumentException)
+        {
+            throw;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
 
     private static void Validar(string titulo, DateTime? dataAlerta, string cor)
     {

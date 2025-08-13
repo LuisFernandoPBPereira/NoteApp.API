@@ -16,6 +16,19 @@ public class LembreteTest
 
         Assert.NotNull(lembrete);
     }
+    
+    [Fact]
+    public void AoCriarLembreteParaAtualizar_RetornarInstancia()
+    {
+        var titulo = "Meu lembrete";
+        var descricao = "Tenho que lembrar o que fazer";
+        var dataAlerta = DateTime.Now.AddDays(2);
+        var cor = "#FFFFFF";
+
+        var lembrete = Lembrete.Criar(Guid.NewGuid(), titulo, descricao, dataAlerta, cor, Guid.NewGuid());
+
+        Assert.NotNull(lembrete);
+    }
 
     [Theory]
     [MemberData(nameof(DadosIncorretosArgumentNullLembrete))]

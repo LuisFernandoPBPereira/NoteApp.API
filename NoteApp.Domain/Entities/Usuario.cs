@@ -21,6 +21,13 @@ public class Usuario
         UserName = userName;
         Email = email;
     }
+    
+    public Usuario(Guid id, string nome, string email)
+    {
+        Id = id;
+        Nome = nome;
+        Email = email;
+    }
 
     public static Usuario Criar(string nome, string userName, string email)
     {
@@ -29,6 +36,26 @@ public class Usuario
             Validar(nome, userName, email);
 
             var usuario = new Usuario(Guid.NewGuid(), nome, userName, email);
+
+            return usuario;
+        }
+        catch (ArgumentException)
+        {
+            throw;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+    
+    public static Usuario Criar(Guid id, string nome, string email)
+    {
+        try
+        {
+            Validar(nome, email);
+
+            var usuario = new Usuario(id, nome, email);
 
             return usuario;
         }
@@ -52,6 +79,19 @@ public class Usuario
         if (string.IsNullOrWhiteSpace(userName))
         {
             throw new ArgumentNullException(nameof(userName), "UserName inválido");
+        }
+
+        if (!Regex.IsMatch(email, "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\\.[A-Za-z0-9-]+)*$"))
+        {
+            throw new ArgumentException("Email inválido", nameof(email));
+        }
+    }
+    
+    private static void Validar(string nome, string email)
+    {
+        if (string.IsNullOrWhiteSpace(nome))
+        {
+            throw new ArgumentNullException(nameof(nome), "Nome inválido");
         }
 
         if (!Regex.IsMatch(email, "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\\.[A-Za-z0-9-]+)*$"))

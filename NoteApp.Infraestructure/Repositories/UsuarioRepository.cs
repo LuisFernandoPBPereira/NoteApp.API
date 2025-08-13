@@ -81,6 +81,21 @@ public class UsuarioRepository : IUsuarioRepository
         return usuarios;
     }
 
+    public async Task<List<string>> ObterRoles(Guid userId, CancellationToken cancellationToken = default)
+    {
+        var roles = await _dbContext.UserRoles
+                                    .GroupJoin(_dbContext.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => new { UserRoles = ur, Roles = r })
+                                    .SelectMany(x => x.Roles, (ur, roles) => new
+                                    {
+                                       Nome = roles.Name
+                                    })
+                                    .Select(x => x.Nome)
+                                    .ToListAsync(cancellationToken);
+
+        return roles;
+
+    }
+
     public async Task Remover(Guid userId, CancellationToken cancellationToken = default)
     {
         var usuario = await _dbContext.Usuarios.Where(x => x.Id == userId).FirstOrDefaultAsync(cancellationToken);

@@ -15,12 +15,7 @@ public class AtualizarUsuarioUseCase
 
     public async Task Executar(Guid userId, AtualizarUsuarioDto usuarioDto, CancellationToken cancellationToken)
     {
-        var usuario = new Usuario
-        {
-            Id = userId,
-            Nome = usuarioDto.Nome,
-            Email = usuarioDto.Email
-        };
+        var usuario = Usuario.Criar(userId, usuarioDto.Nome, usuarioDto.Email);
 
         await _repository.Atualizar(usuario, cancellationToken);
     }

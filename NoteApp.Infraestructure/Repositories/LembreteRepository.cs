@@ -70,7 +70,8 @@ public class LembreteRepository : ILembreteRepository
 
     public async Task<List<Lembrete>> ObterLembretes(int take, int skip, Guid? userId, CancellationToken cancellationToken = default)
     {
-        var query = _dbContext.Lembretes
+        var lembretes = await _dbContext.Lembretes
+            .Where(x => x.UserId == userId)
             .Select(x => new Lembrete
             {
                 Id = x.Id,
@@ -80,14 +81,7 @@ public class LembreteRepository : ILembreteRepository
                 DataCriacao = x.DataCriacao,
                 DataModificacao = x.DataModificacao,
                 Cor = x.Cor
-            });
-
-        if (userId.HasValue)
-        {
-            query = query.Where(x => x.UserId == userId);
-        }
-
-        var lembretes = await query
+            })
             .Skip(skip)
             .Take(take)
             .ToListAsync(cancellationToken);
@@ -97,8 +91,10 @@ public class LembreteRepository : ILembreteRepository
 
     public async Task<List<Lembrete>> ObterLembretesComVencimentoEmUmaSemana(int take, int skip, Guid? userId, CancellationToken cancellationToken = default)
     {
-       var query = _dbContext.Lembretes
-            .Where(x => x.DataAlerta.Value.Date == DateTime.Now.Date.AddDays(7))
+        var dataEmUmaSemana = DateTime.Now.Date.AddDays(7);
+
+       var lembretes = await _dbContext.Lembretes
+            .Where(x => ((DateTime)x.DataAlerta).Date >= DateTime.Now.Date && ((DateTime)x.DataAlerta).Date <= dataEmUmaSemana.Date && x.UserId == userId)
             .Select(x => new Lembrete
             {
                 Id = x.Id,
@@ -108,17 +104,11 @@ public class LembreteRepository : ILembreteRepository
                 DataCriacao = x.DataCriacao,
                 DataModificacao = x.DataModificacao,
                 Cor = x.Cor
-            });
-
-        if (userId.HasValue)
-        {
-            query = query.Where(x => x.UserId == userId);
-        }
-
-        var lembretes = await query
+            })
             .Skip(skip)
             .Take(take)
             .ToListAsync(cancellationToken);
+            
 
         return lembretes;
     }

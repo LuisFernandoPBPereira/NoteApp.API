@@ -6,18 +6,22 @@ namespace NoteApp.Application.UseCases.Lembretes;
 
 public class ObterLembretePorIdUseCase
 {
-    private readonly ILembreteRepository _repository;
+    private readonly ILembreteRepository _lembreteRepository;
+    private readonly IUsuarioRepository _usuarioRepository;
 
-    public ObterLembretePorIdUseCase(ILembreteRepository repository)
+    public ObterLembretePorIdUseCase(ILembreteRepository lembreteRepository, IUsuarioRepository usuarioRepository)
     {
-        _repository = repository;
+        _lembreteRepository = lembreteRepository;
+        _usuarioRepository = usuarioRepository;
     }
 
     public async Task<Lembrete?> Executar(Guid lembreteId, ObterLembretePorIdDto lembreteDto, CancellationToken cancellationToken)
     {
-        var lembrete = await _repository.ObterLembretePorId(lembreteId, cancellationToken);
+        var lembrete = await _lembreteRepository.ObterLembretePorId(lembreteId, cancellationToken);
 
-        if (lembrete is null || lembrete.UserId != lembreteDto.UserId)
+        var userRoles = await _usuarioRepository.ObterRoles(lembreteDto.UserId, cancellationToken);
+
+        if ((lembrete is null || lembrete.UserId != lembreteDto.UserId) && !userRoles.Contains("Admin"))
         {
             return null;
         }

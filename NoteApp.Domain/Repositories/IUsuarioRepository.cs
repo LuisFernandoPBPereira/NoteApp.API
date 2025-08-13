@@ -9,4 +9,5 @@ public interface IUsuarioRepository
     public Task Criar(Usuario usuario, string senha, CancellationToken cancellationToken = default);
     public Task Atualizar(Usuario usuario, CancellationToken cancellationToken = default);
     public Task Remover(Guid userId, CancellationToken cancellationToken = default);
+    public Task<List<string>> ObterRoles(Guid userId, CancellationToken cancellationToken = default);
 }
